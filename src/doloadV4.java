@@ -11,6 +11,9 @@ import java.nio.charset.Charset;
  */
 public class doloadV4 {
 
+    /**
+     * 固有不动
+     * */
     static String kinleStr[] = {"", ".m3u8.", "-"};
     static String version[] = {"v1", "v2", "v3"};
     static String type[] = {"mp4", "ts", "video"};
@@ -32,21 +35,31 @@ public class doloadV4 {
 //                "06e2d23287"};
 //        Integer indexMax[] = {488,476,490,531,454,367,449,406};
 
-        Integer m_id = 65;
-        Integer id[] = {595,599,603,605,616,618,621,624,636,642};
-        String code[] = {
-                "05bb34db2b",
-                "394a0f54d8",
-                "60562a980d",
-                "383aee3378",
-                "f99139a9c6",
-                "e25b953b0a",
-                "639ade1142",
-                "da69bd10e9",
-                "444b4b6842",
-                "87cc54900e"};
+//        Integer m_id = 65;
+//        Integer id[] = {595,599,603,605,616,618,621,624,636,642};
+//        String code[] = {
+//                "05bb34db2b",
+//                "394a0f54d8",
+//                "60562a980d",
+//                "383aee3378",
+//                "f99139a9c6",
+//                "e25b953b0a",
+//                "639ade1142",
+//                "da69bd10e9",
+//                "444b4b6842",
+//                "87cc54900e"};
+//
+//        Integer indexMax[] = {400,493,462,461,461,458,466,419,501,496};
 
-        Integer indexMax[] = {400,493,462,461,461,458,466,419,501,496};
+        Integer m_id = 103;
+        Integer id[] = {885, 886, 887, 888};
+        String code[] = {
+                "7ff7697ce8",
+                "3a1e350450",
+                "f34c6b9b25",
+                "ed77136a83"};
+
+        Integer indexMax[] = {617,623,610,641};
 
         for(int i = 0; i<id.length; i++ ){
             System.out.println("开启"+code[i]+"任务...");
