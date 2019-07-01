@@ -19,23 +19,39 @@ public class doloadV4 {
 
     public static void main(String[] args) throws IOException {
 
-        Integer m_id = 101;
-        Integer id[] = {800,801,802,803,804,805,806,807};
+//        Integer m_id = 101;
+//        Integer id[] = {800,801,802,803,804,805,806,807};
+//        String code[] = {
+//                "8e19e9a74b",
+//                "09f0cc3018",
+//                "1972dd68ca",
+//                "6c65444e36",
+//                "1ca9b967cd",
+//                "5b8e3f76e4",
+//                "bbd9366740",
+//                "06e2d23287"};
+//        Integer indexMax[] = {488,476,490,531,454,367,449,406};
+
+        Integer m_id = 65;
+        Integer id[] = {595,599,603,605,616,618,621,624,636,642};
         String code[] = {
-                "8e19e9a74b",
-                "09f0cc3018",
-                "1972dd68ca",
-                "6c65444e36",
-                "1ca9b967cd",
-                "5b8e3f76e4",
-                "bbd9366740",
-                "06e2d23287"};
-        Integer indexMax[] = {488,476,490,531,454,367,449,406};
+                "05bb34db2b",
+                "394a0f54d8",
+                "60562a980d",
+                "383aee3378",
+                "f99139a9c6",
+                "e25b953b0a",
+                "639ade1142",
+                "da69bd10e9",
+                "444b4b6842",
+                "87cc54900e"};
+
+        Integer indexMax[] = {400,493,462,461,461,458,466,419,501,496};
 
         for(int i = 0; i<id.length; i++ ){
             System.out.println("开启"+code[i]+"任务...");
             System.out.println("任务信息： "+m_id+", "+id[i]+", "+code[i]+", "+indexMax[i]);
-            downloadTS("H", "Python\\"+i+"\\"+code[i], m_id, id[i], code[i], 1, indexMax[i], 2);
+            downloadTS("F", "Python\\"+m_id+"\\"+i+"\\"+code[i], m_id, id[i], code[i], 1, indexMax[i], 2);
         }
 
         System.out.println("当前任务"+m_id+"已经全部完成");
@@ -56,6 +72,8 @@ public class doloadV4 {
      */
     private static void downloadTS(String pan,String path, Integer indexMain,Integer indexSub,String code,Integer number,Integer indexMax, Integer verNum) throws IOException{
         String webURL = ".julyedu.com/"; //指定网站
+        String command = ""; //命令
+        String resp = ""; //反馈
         createFolder(pan, path);
         Integer n = 0;
         if(number!=0){
@@ -75,7 +93,7 @@ public class doloadV4 {
                 //规则 .m3u8.
                 if(kinleStr[verNum].equals(".m3u8.")){
                     if(n==0 || n==number)System.out.println("以\".\"为规则，执行下载体");
-                    String resp = execCMD("dl "
+                    resp = execCMD("dl "
                             + "--exec \"move {} "
                             +pan+":\\"
                             +path+"\\{}\" http://" + version[verNum] + webURL + type[verNum] + "/"
@@ -89,7 +107,16 @@ public class doloadV4 {
                 if(kinleStr[verNum].equals("-")){
                     if(n==0 || n==number) System.out.println("以\"-\"为规则，执行下载体.(" + (n==0 || n==number) + ")");
 
-                    String resp = execCMD("dl "
+                     command = "dl "
+                            + "--exec \"move {} "
+                            +pan+":\\"
+                            +path+"\\{}\" http://" + version[verNum] + webURL + type[verNum] + "/"
+                            +indexMain+"/"
+                            +indexSub+"/"
+                            +code+kinleStr[verNum]
+                            +tempZeroNumber+".ts";
+
+                    resp = execCMD("dl "
                             + "--exec \"move {} "
                             +pan+":\\"
                             +path+"\\{}\" http://" + version[verNum] + webURL + type[verNum] + "/"
@@ -98,6 +125,8 @@ public class doloadV4 {
                             +code+kinleStr[verNum]
                             +tempZeroNumber+".ts");
                 }
+
+                System.out.println("下载："+command);
 
                 //判断文件是否存在，即下载中或下载成功
                 File fileDownSucc = new File(pan+":\\"+path+"\\"+code + kinleStr[verNum] + tempZeroNumber
@@ -141,47 +170,6 @@ public class doloadV4 {
             System.out.println(errInfo);
         }
         System.out.println("下载结束! ");
-    }
-
-
-    public static String[] getKinleStr() {
-        return kinleStr;
-    }
-
-    public static void setKinleStr(String[] kinleStr) {
-        doloadV4.kinleStr = kinleStr;
-    }
-
-    public static String[] getVersion() {
-        return version;
-    }
-
-    public static void setVersion(String[] version) {
-        doloadV4.version = version;
-    }
-
-    public static String[] getType() {
-        return type;
-    }
-
-    public static void setType(String[] type) {
-        doloadV4.type = type;
-    }
-
-    public static Integer getErr() {
-        return err;
-    }
-
-    public static void setErr(Integer err) {
-        doloadV4.err = err;
-    }
-
-    public static String getErrInfo() {
-        return errInfo;
-    }
-
-    public static void setErrInfo(String errInfo) {
-        doloadV4.errInfo = errInfo;
     }
 
     /**
