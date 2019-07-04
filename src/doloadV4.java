@@ -6,60 +6,35 @@ import java.nio.charset.Charset;
 
 /**
  * @author 九天临兵斗
- * @time 2019/6/24
+ * @time 2019/7/4
  * @deprecated 下载一组视频，例如效果类似于下载一部电视剧
+ *
+ *  7/4
+ * 1. 使用更加简明。如果发现存在，不在持续判断输出，一直碰到正常运行才继续输出。
+ * 2. 可以下载m3u8系列视频
+ *
  */
 public class doloadV4 {
 
     /**
      * 固有不动
      * */
-    static String kinleStr[] = {"", ".m3u8.", "-"};
+    static String kinleStr[] = {".", ".m3u8.", "-"};
     static String version[] = {"v1", "v2", "v3"};
     static String type[] = {"mp4", "ts", "video"};
     static Integer err = 0;
     static String errInfo = "";
+    static String curStr = ""; //当前
+    static String subStr = ""; //上一次
 
     public static void main(String[] args) throws IOException {
-
-//        Integer m_id = 101;
-//        Integer id[] = {800,801,802,803,804,805,806,807};
-//        String code[] = {
-//                "8e19e9a74b",
-//                "09f0cc3018",
-//                "1972dd68ca",
-//                "6c65444e36",
-//                "1ca9b967cd",
-//                "5b8e3f76e4",
-//                "bbd9366740",
-//                "06e2d23287"};
-//        Integer indexMax[] = {488,476,490,531,454,367,449,406};
-
-//        Integer m_id = 65;
-//        Integer id[] = {595,599,603,605,616,618,621,624,636,642};
-//        String code[] = {
-//                "05bb34db2b",
-//                "394a0f54d8",
-//                "60562a980d",
-//                "383aee3378",
-//                "f99139a9c6",
-//                "e25b953b0a",
-//                "639ade1142",
-//                "da69bd10e9",
-//                "444b4b6842",
-//                "87cc54900e"};
-//
-//        Integer indexMax[] = {400,493,462,461,461,458,466,419,501,496};
-
-        Integer m_id = 103;
-        Integer id[] = {885, 886, 887, 888};
+//        http://v2.julyedu.com/ts/45/227/4ec968c7.m3u8.890.ts
+        Integer m_id = 68;
+        Integer id[] = {619};
         String code[] = {
-                "7ff7697ce8",
-                "3a1e350450",
-                "f34c6b9b25",
-                "ed77136a83"};
+                "5bf7d175c9"};
 
-        Integer indexMax[] = {617,623,610,641};
+        Integer indexMax[] = {477};
 
         for(int i = 0; i<id.length; i++ ){
             System.out.println("开启"+code[i]+"任务...");
@@ -87,6 +62,7 @@ public class doloadV4 {
         String webURL = ".julyedu.com/"; //指定网站
         String command = ""; //命令
         String resp = ""; //反馈
+
         createFolder(pan, path);
         Integer n = 0;
         if(number!=0){
@@ -106,6 +82,16 @@ public class doloadV4 {
                 //规则 .m3u8.
                 if(kinleStr[verNum].equals(".m3u8.")){
                     if(n==0 || n==number)System.out.println("以\".\"为规则，执行下载体");
+
+                    command ="dl "
+                            + "--exec \"move {} "
+                            +pan+":\\"
+                            +path+"\\{}\" http://" + version[verNum] + webURL + type[verNum] + "/"
+                            +indexMain+"/"
+                            +indexSub+"/"
+                            +code+kinleStr[verNum]
+                            +n+".ts";
+
                     resp = execCMD("dl "
                             + "--exec \"move {} "
                             +pan+":\\"
@@ -114,6 +100,7 @@ public class doloadV4 {
                             +indexSub+"/"
                             +code+kinleStr[verNum]
                             +n+".ts");
+
                 }
 
                 //规则 -
@@ -139,20 +126,51 @@ public class doloadV4 {
                             +tempZeroNumber+".ts");
                 }
 
-                System.out.println("下载："+command);
+               // System.out.println("下载："+command);
 
                 //判断文件是否存在，即下载中或下载成功
-                File fileDownSucc = new File(pan+":\\"+path+"\\"+code + kinleStr[verNum] + tempZeroNumber
-                        + kinleStr[verNum]
-                        + code + kinleStr[verNum] + tempZeroNumber +".ts");
+//                File fileDownSucc = new File(pan+":\\"+path+"\\"+code + kinleStr[verNum] + tempZeroNumber
+//                            + kinleStr[verNum]
+//                            + code + kinleStr[verNum] + tempZeroNumber +".ts");
 
-                if(!fileDownSucc.exists()){
-                    System.err.println("正在执行(已执行"+n+"次)，已完成  "
-                            +((float)n/indexMax*100)+"%"
-                            +", 下载失败："
-                            + pan+":\\"+path+"\\"+code + kinleStr[verNum] + tempZeroNumber
+                File fileDownSucc = new File("");
+
+                if(kinleStr[verNum].equals("-")){
+//
+//                    System.out.println(pan+":\\"+path+"\\"+code + kinleStr[verNum] + tempZeroNumber
+//                            + kinleStr[verNum]
+//                            + code + kinleStr[verNum] + tempZeroNumber +".ts");
+                    System.out.println("正在判断是否已经存在 ......");
+                    fileDownSucc= new File(pan+":\\"+path+"\\"+code + kinleStr[verNum] + tempZeroNumber
                             + kinleStr[verNum]
                             + code + kinleStr[verNum] + tempZeroNumber +".ts");
+                }
+
+                if(kinleStr[verNum].equals(".m3u8.")){
+
+//                    System.out.println(pan+":\\"+path+"\\"+code+kinleStr[verNum]+n+".ts");
+                    //System.out.println("正在判断是否已经存在 ......");
+                    fileDownSucc = new File(pan+":\\"+path+"\\"+code+kinleStr[verNum]+n
+                            +"-"+code+kinleStr[verNum]+n+".ts");
+//                    fileDownSucc = new File(pan+":\\"+path+"\\"+code + kinleStr[verNum] + tempZeroNumber +".ts");
+                }
+                if(!fileDownSucc.exists()){
+                    //System.out.println("在吗？"+!fileDownSucc.exists());
+                    if(kinleStr[verNum].equals("-")){
+                        System.err.println("正在执行(已执行"+n+"次)，已完成  "
+                                +((float)n/indexMax*100)+"%"
+                                +", 下载失败："
+                                + pan+":\\"+path+"\\"+code + kinleStr[verNum] + tempZeroNumber
+                                + kinleStr[verNum]
+                                + code + kinleStr[verNum] + tempZeroNumber +".ts");
+                    }
+                    if(kinleStr[verNum].equals(".m3u8.")){
+                        System.err.println("正在执行(已执行"+n+"次)，已完成  "
+                                +((float)n/indexMax*100)+"%"
+                                +", 下载失败："
+                                + pan+":\\"+path+"\\"+code+kinleStr[verNum]+n+".ts");
+                    }
+
                     err = err + 1;
                     n--;
                     if(err>=5){
@@ -173,8 +191,10 @@ public class doloadV4 {
                         break;
                     }
                 }else {
+                    //System.out.println("在吗？"+!fileDownSucc.exists());
                     err = 0;
-                    System.out.println("正在执行(已执行" + n + "次)，已完成  " + ((float) n / indexMax * 100) + "%");
+                    curStr = "正在执行(已执行" + n + "次)，已完成  " + ((float) n / indexMax * 100) + "%";
+                    System.out.println(curStr);
                 }//判断是否有错误信息
             }//判断文件是否已经存在
         } //循环结束
@@ -182,6 +202,8 @@ public class doloadV4 {
         if(!(errInfo == "")){
             System.out.println(errInfo);
         }
+        curStr = "";
+        subStr = "";
         System.out.println("下载结束! ");
     }
 
@@ -205,7 +227,11 @@ public class doloadV4 {
      */
     private static boolean noExists(File file){
         if(file.exists()){
-            System.out.println("该文件已存在，跳过...");
+            curStr = "该文件已存在，跳过...";
+            if(curStr != subStr){
+                System.out.println(curStr);
+            }
+            subStr = curStr;
             return false;
         }else{
             return true;
